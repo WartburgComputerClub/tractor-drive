@@ -44,7 +44,7 @@ class Wheel:
             
         x = round(x,2)
         turn = x
-        print('turn:',x)
+        #print('turn:',x)
         self.steer = turn
         
     def getSteer(self):
