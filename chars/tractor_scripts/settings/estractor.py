@@ -5,10 +5,16 @@
 from math import pi
 import configparser
 from os.path import dirname,realpath
+from os import name as osname
+
+if osname == 'nt': # stupid windows...
+    deli = '\\'
+else:
+    deli = '/'
 
 cfg_file = dirname(realpath(__file__))
 for i in range(3):
-    cfg_file = cfg_file[0:cfg_file.rfind('/')]
+    cfg_file = cfg_file[0:cfg_file.rfind(deli)]
 cfg_file += '/global.cfg'
 
 gc = configparser.ConfigParser()
