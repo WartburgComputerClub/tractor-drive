@@ -65,7 +65,7 @@ TIRE_STEER = (gc.getboolean('tire','steerable_FD'),
               gc.getboolean('tire','steerable_RP'))
 
 # name of tire objects in blender
-TIRE_OBJS = ('TireFD', 'TireFP','TireRD', 'TireRP')
+TIRE_OBJS = ('TireFD.3P', 'TireFP.3P','TireRD.3P', 'TireRP.3P')
 
 TIRE_GRIP = (gc.getfloat('tire','grip_FD'),
              gc.getfloat('tire','grip_FP'),
