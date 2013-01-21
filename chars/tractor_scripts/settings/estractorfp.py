@@ -25,10 +25,10 @@ gc.read(cfg_file)
 WHEEL = gc.get('wheel','port')
 
 # Positions for tires in blender model (blender units)
-TIRE_POS = ((.371,  -.539, -.3425), # front driver's tire
-            (-.371, -.539, -.3425), # front passenger's tire
-            (.34,   .276,  -.3425),      # rear driver's tire
-            (-.34,  .276,  -.3425))      # rear passenger's tire
+TIRE_POS = ((.471,  -.539, -.3425), # front driver's tire
+            (-.471, -.539, -.3425), # front passenger's tire
+            (.44,   .576,  -.3425),      # rear driver's tire
+            (-.44,  .576,  -.3425))      # rear passenger's tire
 # the positions of the tires identified in the previous tuple will
 # remain consistent throughout this file, (FD,FP,RD,RP).
 
