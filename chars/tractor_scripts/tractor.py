@@ -6,17 +6,15 @@ import bge
 from math import acos
 import mathutils
 
-class Tractor:
+class Tractor(bge.types.KX_GameObject):
     
-    def __init__(self,obj,settings):
+    def __init__(self,old_owner):
         self.active = False
-        self.simFlag = False
-        self.simOver = False
                 
         self.stuckCount = 0
         self.vel = []
-        # blender object
-        self.obj = obj
+
+    def setup(self,settings):
         
         self.settings = settings
         
@@ -28,15 +26,6 @@ class Tractor:
         
         self.initSusp()
         
-    def simFinished(self):
-        # add time limit
-        return self.simOver
-        
-    def setSim(self):
-        self.simFlag = True
-        self.active = True
-        self.simFile = open('sim.data','w')
-        
     def initSusp(self):
         settings = self.settings
         for i in range(4):
@@ -47,11 +36,11 @@ class Tractor:
             self.vid.setRollInfluence(settings.ROLL_INFLUENCE[i],i)
         
     def initPhysics(self):
-        phid = self.obj.getPhysicsId()
+        phid = self.getPhysicsId()
         constraint = bge.constraints.createConstraint(phid,0,11)
         cid = constraint.getConstraintId()
         self.vid = bge.constraints.getVehicleConstraint(cid)
-        self.obj['vehicleID'] = self.vid
+        self['vehicleID'] = self.vid
         
     def initTires(self):
         settings = self.settings
@@ -96,9 +85,8 @@ class Tractor:
         flipped beyond a given threshold and false
         otherwise
         '''
-        tractor = self.obj
         # get angle between global and local z value
-        val = tractor.getAxisVect((0,0,1)) 
+        val = self.getAxisVect((0,0,1)) 
         cos_val = val[2]/(val[0]**2 + val[1]**2 + val[2]**2)**(.5)
         theta = acos(cos_val)
         if theta > self.settings.FLIP_THRESH:
@@ -112,8 +100,7 @@ class Tractor:
         is stuck on an object. (happens when using
         the steering wheel)
         '''
-        car = self.obj
-        wheel = car['wheel']
+        wheel = self['wheel']
         if (wheel.connected() and self.active):
             resolution = 300
             threshold = .5
@@ -125,7 +112,7 @@ class Tractor:
                 self.vel = []
             else:
                 self.stuckCount += 1
-                self.vel.append(self.obj.getLinearVelocity().magnitude)
+                self.vel.append(self.getLinearVelocity().magnitude)
             return False
         else:
             return False

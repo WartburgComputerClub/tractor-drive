@@ -20,12 +20,12 @@ def main(cont):
 
 	cont.activate('set_hud')
 	
-	trac = Tractor(cont.owner,settings)
+	trac = Tractor(cont.owner)
+	trac.setup(settings)
 	# make a handle in the blender object so we can access this
 	# instance later
-	cont.owner['handle'] = trac
-	
-	cc = CruiseControl(cont.owner,settings)
+		
+	cc = CruiseControl(settings)
 	cont.owner['cc'] = cc
 
 	if cont.owner['isUser']:

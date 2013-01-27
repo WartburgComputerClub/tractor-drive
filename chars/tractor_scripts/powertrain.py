@@ -1,7 +1,7 @@
 import bge
 
 def power(cont):
-    trac = cont.owner['handle']
+    trac = cont.owner
     
     gas = cont.sensors['gas']
     reverse = cont.sensors['reverse']
@@ -14,7 +14,7 @@ def power(cont):
         trac.setPower(0)
         
 def steering(cont):
-    car = cont.owner
+    trac = cont.owner
 
     turn = 0.3
     
@@ -27,5 +27,4 @@ def steering(cont):
     else:
         turn = 0.0
 
-    trac = car['handle']
     trac.steer(turn)
