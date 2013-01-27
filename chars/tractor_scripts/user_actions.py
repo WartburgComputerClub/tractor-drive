@@ -29,30 +29,22 @@ def portal(cont):
 
 def check_dead(cont):
         
-    trac = cont.owner['handle'] 
+    trac = cont.owner
     if trac.flipped():
         cont.activate(cont.actuators['restart_game'])
     elif trac.stuck():
         cont.activate(cont.actuators['restart_game'])
-    elif trac.simFlag and trac.simFinished():
-        cont.activate(cont.actuators['quit_game'])
-    
-def set_sim(cont):
-    trac = cont.owner['handle']
-    trac.setSim()
     
 def update(a):
-    car = a.owner
-    trac = car['handle']
+    trac = a.owner
 
-
-    wheel = car['wheel']
+    wheel = trac['wheel']
     if wheel.connected() and trac.active:
         wheel.update()
         trac.steer(wheel.getSteer())
         # Cruise control calculations
-        cc = car['cc']
-        cc.update()
+        cc = trac['cc']
+        cc.update(trac.getLinearVelocity().magnitude)
         trac.setPower(cc.getPower())
         
     # should we make active
@@ -62,7 +54,7 @@ def update(a):
         if abs(prev - wheel.getSteer()) > .01:
             if trac.stuckCount > 2:
                 trac.active = True
-                car['cc'].reset()      # reset cruise control (time drift)
+                trac['cc'].reset()      # reset cruise control (time drift)
                 trac.stuckCount = 0
                 
             else:
