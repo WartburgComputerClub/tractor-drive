@@ -26,7 +26,7 @@ def main(cont):
 	# instance later
 		
 	cc = CruiseControl(settings)
-	cont.owner['cc'] = cc
+	trac.cruise_control = cc
 
 	if cont.owner['isUser']:
 		wheel = Wheel(settings)

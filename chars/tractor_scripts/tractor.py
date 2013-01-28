@@ -66,6 +66,9 @@ class Tractor(bge.types.KX_GameObject):
         for i in range(4):
             self.vid.applyEngineForce(power,i)
             
+    def getSpeed(self):
+        return -1*self.getLinearVelocity(True)[1]
+            
     def forward(self):
         self.setPower(self.settings.FORWARD_POWER)
     

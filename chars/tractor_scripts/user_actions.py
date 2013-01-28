@@ -43,9 +43,8 @@ def update(a):
         wheel.update()
         trac.steer(wheel.getSteer())
         # Cruise control calculations
-        cc = trac['cc']
-        cc.update(trac.getLinearVelocity().magnitude)
-        trac.setPower(cc.getPower())
+        trac.cruise_control.update(trac.getSpeed())
+        trac.setPower(trac.cruise_control.getPower())
         
     # should we make active
     if not trac.active and wheel.connected():
@@ -54,7 +53,7 @@ def update(a):
         if abs(prev - wheel.getSteer()) > .01:
             if trac.stuckCount > 2:
                 trac.active = True
-                trac['cc'].reset()      # reset cruise control (time drift)
+                trac.cruise_control.reset()      # reset cruise control (time drift)
                 trac.stuckCount = 0
                 
             else:
