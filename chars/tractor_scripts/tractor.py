@@ -1,5 +1,5 @@
 # file tractor.py
-# author: Andrew Reisner <andrew.reisner@gmail.com>
+# author: Andrew Reisner <andrew@reisner.co>
 # This class makes it easy to interact with the 
 # bullet vehicle physics
 import bge
