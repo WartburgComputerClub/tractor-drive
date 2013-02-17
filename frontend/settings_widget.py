@@ -3,23 +3,12 @@ from PyQt4.QtGui import *
 from ui_settings import Ui_Settings
 import Image
 import ImageQt
-import matplotlib
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
 import ConfigParser
 import os,shutil
 from math import pi
 from string import split
 from subprocess import call
 from os.path import dirname,realpath
-
-class Simulation(QThread):
-    def run(self):
-        proj_home = dirname(realpath(__file__))
-        proj_home = proj_home[0:proj_home.rfind('/')]
-        conf = ConfigParser.ConfigParser
-        conf.read(proj_home + '/global.cfg')
-        call([conf.get('system','blenderplayer'),proj_home + '/chars/sim.blend'])
 
 class SettingsWidget(QWidget,Ui_Settings):
         
@@ -40,13 +29,6 @@ class SettingsWidget(QWidget,Ui_Settings):
         self.pitem = self.scene.addPixmap(pixMap)
         self.scene.update()
         
-        self.fig = Figure((5.0,4.0))
-        self.canvas = FigureCanvas(self.fig)
-        self.canvas.setParent(self)
-        self.axes = self.fig.add_subplot(111)
-        self.cruiseControlBox.layout().addWidget(self.canvas)
-        
-        self.updatePlot()
         self.readSettings(proj_home + '/global.cfg')
         self.setConnections()
         
@@ -54,44 +36,11 @@ class SettingsWidget(QWidget,Ui_Settings):
         self.dial.valueChanged.connect(self.updateImage)
         self.saveButton.clicked.connect(self.saveSettings)
         self.resetButton.clicked.connect(self.factoryReset)
-        self.simulateButton.clicked.connect(self.runSim)
         
     def factoryReset(self):
         proj_home = dirname(realpath(__file__))
         proj_home = proj_home[0:proj_home.rfind('/')]
         self.readSettings(proj_home + '/global.factory.cfg')
-        
-    def updatePlot(self):
-        self.axes.clear()
-        xs = []
-        ys = []
-        proj_home = dirname(realpath(__file__))
-        proj_home = proj_home[0:proj_home.rfind('/')]
-        fp = open(proj_home + '/sim.data','r')
-        for line in fp:
-            x,y = split(line,' ')
-            xs.append(x)
-            ys.append(y)
-        self.axes.plot(xs,ys)
-        self.canvas.draw()
-        
-    def runSim(self):
-        proj_home = dirname(realpath(__file__))
-        proj_home = proj_home[0:proj_home.rfind('/')]
-        shutil.copy(proj_home + '/global.cfg',proj_home + '/global.cfg.bak')
-        self.statusBar.showMessage('Running Simulation...')
-        self.saveSettings()
-        sim = Simulation()
-        sim.finished.connect(self.simFinished)
-        sim.start()
-        self.sim = sim
-        
-    def simFinished(self):
-        self.statusBar.showMessage("Ready")
-        proj_home = dirname(realpath(__file__))
-        proj_home = proj_home[0:proj_home.rfind('/')]
-        os.rename(proj_home + '/global.cfg.bak',proj_home + '/global.cfg')
-        self.updatePlot()
         
     def updateImage(self):
         angle = self.dial.value() * (180/100.0)
