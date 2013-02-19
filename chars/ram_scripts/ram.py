@@ -30,4 +30,4 @@ def init(cont):
     ram.registerAnimation('flounder',cont,acts['ram_flounder'])
     ram.registerAnimation('drown',cont,acts['ram_drown'])
     ram.registerAnimation('attack',cont,acts['ram_attack'])
-    ram.animate('walk')
+    ram.animate('run')

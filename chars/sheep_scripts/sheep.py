@@ -30,4 +30,4 @@ def init(cont):
     sheep.registerAnimation('flounder',cont,acts['sheep_flounder'])
     sheep.registerAnimation('puff',cont,acts['sheep_puff'])
     sheep.registerAnimation('drown',cont,acts['sheep_drown'])
-    sheep.animate('walk')
+    sheep.animate('run')
