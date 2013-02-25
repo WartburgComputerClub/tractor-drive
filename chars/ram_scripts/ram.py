@@ -9,25 +9,43 @@ import bge
 class Ram(bge.types.KX_GameObject):
     
     def __init__(self,old_owner):
-        self.animations = {}
-        pass
+        self.status = None
+        self.actmap = {
+                       'walk':'ram_walk',
+                       'run': 'ram_run',
+                       'graze':'ram_graze',
+                       'helpless':'ram_helpless',
+                       'hit':'hit_ram',
+                       'flounder':'ram_flounder',
+                       'drown':'ram_drown',
+                       'attack':'ram_attack',
+                       'motion':'ram_motion'
+                       }
+    def act(self,name):
+        return self.controller.actuators[self.actmap[name]]
     
-    def registerAnimation(self,name,controller,actuator):
-        self.animations[name] = (controller,actuator)
-    
-    def animate(self,action):
-        if action in self.animations.keys():
-            self.animations[action][0].activate(self.animations[action][1])
+    def walk(self,speed=.01):
+        speed *= -1
+        if self.status != None:
+            self.controller.deactivate(self.act(self.status))
+        self.status = 'walk'
+        
+        self.controller.activate(self.act('walk'))
+        self.act('motion').dLoc = (0,speed,0)
+        
+    def turn(self,angle):
+        self.act('motion').dRot = (0,0,angle)
+        
+    def update(self):
+        self.controller.activate(self.act('motion'))
+        print(self.worldPosition)
     
 def init(cont):
-    ram = Ram(cont.owner)
-    acts = cont.actuators
-    ram.registerAnimation('walk', cont,acts['ram_walk'])
-    ram.registerAnimation('run', cont,acts['ram_run'])
-    ram.registerAnimation('graze',cont,acts['ram_graze'])
-    ram.registerAnimation('helpless',cont,acts['ram_helpless'])
-    ram.registerAnimation('hit',cont,acts['hit_ram'])
-    ram.registerAnimation('flounder',cont,acts['ram_flounder'])
-    ram.registerAnimation('drown',cont,acts['ram_drown'])
-    ram.registerAnimation('attack',cont,acts['ram_attack'])
-    ram.animate('run')
+    if not cont.owner['initialized']:
+        ram = Ram(cont.owner)
+        ram.controller = cont
+        ram.walk()
+        cont.owner['initialized'] = True
+    else:
+        cont.owner.update()
+        
