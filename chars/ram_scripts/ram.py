@@ -25,20 +25,39 @@ class Ram(bge.types.KX_GameObject):
         return self.controller.actuators[self.actmap[name]]
     
     def walk(self,speed=.01):
-        speed *= -1
         if self.status != None:
             self.controller.deactivate(self.act(self.status))
         self.status = 'walk'
         
         self.controller.activate(self.act('walk'))
         self.act('motion').dLoc = (0,speed,0)
-        
+
+    def run(self,speed=.03):
+        if self.status != None:
+            self.controller.deactivate(self.act(self.status))
+        self.status = 'run'
+
+        self.controller.activate(self.act('run'))
+        self.act('motion').dLoc = (0,speed,0)
+
+    def graze(self):
+        if self.status != None:
+            self.controller.deactivate(self.act(self.status))
+        self.status = 'graze'
+
+        self.controller.activate(self.act('graze'))
+        self.act('motion').dLoc = (0,0,0)
+
+    def navigate(self):
+        self.turn(0.01)
+    
     def turn(self,angle):
         self.act('motion').dRot = (0,0,angle)
         
     def update(self):
+        self.navigate()
         self.controller.activate(self.act('motion'))
-        print(self.worldPosition)
+        print(self.status, "at", self.worldPosition)
     
 def init(cont):
     if not cont.owner['initialized']:
