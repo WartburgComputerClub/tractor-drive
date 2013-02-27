@@ -27,24 +27,24 @@ class Sheep(bge.types.KX_GameObject):
         return self.controller.actuators[self.actmap[name]]
     
     def walk(self,speed=.01):
-        #if self.status != None:
-            #self.controller.deactivate(self.act(self.status))
+        if self.status != None:
+            self.controller.deactivate(self.act(self.status))
         self.status = 'walk'
         
         self.controller.activate(self.act('walk'))
         self.act('motion').dLoc = (0,speed,0)
 
     def run(self,speed=.03):
-        #if self.status != None:
-            #self.controller.deactivate(self.act(self.status))
+        if self.status != None:
+            self.controller.deactivate(self.act(self.status))
         self.status = 'run'
 
         self.controller.activate(self.act('run'))
         self.act('motion').dLoc = (0,speed,0)
 
     def graze(self):
-        #if self.status != None:
-            #self.controller.deactivate(self.act(self.status))
+        if self.status != None:
+            self.controller.deactivate(self.act(self.status))
         self.status = 'graze'
 
         self.controller.activate(self.act('graze'))
@@ -71,8 +71,7 @@ class Sheep(bge.types.KX_GameObject):
         self.act('motion').dRot = (0,0,angle)
         
     def update(self):
-        self.run()
-        #self.turn(0.01)
+        self.navigate()
         #self.controller.activate(self.act(self.status))
         self.controller.activate(self.act('motion'))
         print(self.status, "at", self.worldPosition)
@@ -83,7 +82,7 @@ def init(cont):
     if not cont.owner['initialized']:
         sheep = Sheep(cont.owner)
         sheep.controller = cont
-        sheep.run()
+        sheep.graze()
         cont.owner['initialized'] = True
     else:
         cont.owner.update()
