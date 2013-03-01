@@ -12,8 +12,11 @@ artist.
 
 # Running/Installing
 To run locally, run the tractorDrive executable:
+
     ./tractorDrive
+
 To install:
+
     sudo make install
 
 # Credits
