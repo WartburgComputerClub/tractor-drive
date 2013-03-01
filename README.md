@@ -8,10 +8,12 @@ artist.
 
 # Dependencies
 * Blender >= 2.6
-* PyQt development libraries
+* PyQt
 
-# Build and install
-    make
+# Running/Installing
+To run locally, run the tractorDrive executable:
+    ./tractorDrive
+To install:
     sudo make install
 
 # Credits

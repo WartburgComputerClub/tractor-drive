@@ -5,7 +5,7 @@ ui:
 	python build.py
 all: ui
 
-install: all
+install:
 	mkdir $(prefix)tractorDrive
 	cp -r chars $(prefix)tractorDrive/
 	cp -r effects $(prefix)tractorDrive/
