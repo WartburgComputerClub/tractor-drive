@@ -25,12 +25,19 @@ class Ram(bge.types.KX_GameObject):
         return self.controller.actuators[self.actmap[name]]
     
     def walk(self,speed=.01):
-        speed *= -1
         if self.status != None:
             self.controller.deactivate(self.act(self.status))
         self.status = 'walk'
         
         self.controller.activate(self.act('walk'))
+        self.act('motion').dLoc = (0,speed,0)
+
+    def run(self,speed=.04):
+        if self.status != None:
+            self.controller.deactivate(self.act(self.status))
+            
+        self.status = 'run'
+        self.controller.activate(self.act('run'))
         self.act('motion').dLoc = (0,speed,0)
         
     def turn(self,angle):
