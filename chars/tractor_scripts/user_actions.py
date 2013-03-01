@@ -42,19 +42,23 @@ def update(a):
     if wheel.connected() and trac.active:
         wheel.update()
         trac.steer(wheel.getSteer())
-        # Cruise control calculations
-        trac.cruise_control.update(trac.getSpeed())
-        trac.setPower(trac.cruise_control.getPower())
+    # Cruise control calculations
+    trac.cruise_control.update(trac.getSpeed())
+    trac.setPower(trac.cruise_control.getPower())
         
     # should we make active
-    if not trac.active and wheel.connected():
-        prev = wheel.getSteer()
-        wheel.update()
-        if abs(prev - wheel.getSteer()) > .01:
-            if trac.stuckCount > 2:
-                trac.active = True
-                trac.cruise_control.reset()      # reset cruise control (time drift)
-                trac.stuckCount = 0
-                
-            else:
-                trac.stuckCount += 1
+    if not trac.active:
+        if wheel.connected():
+            prev = wheel.getSteer()
+            wheel.update()
+            if abs(prev - wheel.getSteer()) > .01:
+                if trac.stuckCount > 2:
+                    trac.active = True
+                    trac.cruise_control.reset()      # reset cruise control (time drift)
+                    trac.stuckCount = 0
+                    
+                else:
+                    trac.stuckCount += 1
+        else:
+            trac.active = True
+            
