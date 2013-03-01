@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ! -f /usr/local/tractorDrive/frontend/main.pyw ];
+then   
+    exec python frontend/main.pyw
+else
+    exec python /usr/local/tractorDrive/frontend/main.pyw
+fi
