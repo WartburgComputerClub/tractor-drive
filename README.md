@@ -8,7 +8,9 @@ artist.
 
 # Dependencies
 * Blender >= 2.6
-* PyQt
+* PyQt4
+* Python Imaging Library (PIL)
+* pyserial
 
 # Running/Installing
 To run locally, run the tractorDrive executable:

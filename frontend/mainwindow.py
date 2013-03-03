@@ -13,9 +13,7 @@ class Launcher(QThread):
     def run(self):
         proj_home = dirname(realpath(__file__))
         proj_home = proj_home[0:proj_home.rfind('/')]
-        conf = ConfigParser.ConfigParser()
-        conf.read(proj_home + '/global.cfg')
-        call([conf.get('system','blenderplayer'),proj_home + '/levels/portal_world.blend'])
+        call(['blenderplayer',proj_home + '/levels/portal_world.blend'])
     
 class MainWindow(QMainWindow, Ui_MainWindow):
     
@@ -30,6 +28,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.countdown.timeout.connect(self.decrement)
         self.launchSignal.connect(self.launchButton.click)
         self.launchButton.clicked.connect(self.launch)
+        self.rebootButton.clicked.connect(self.reboot)
+        self.shutdownButton.clicked.connect(self.shutdown)
         self.tabWidget.currentChanged.connect(self.tabChange)
         self.calibrationWidget = CalibrationWidget()
         self.tabWidget.addTab(self.calibrationWidget,"Calibration")
@@ -70,3 +70,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         launcher.start()
         self.launcher = launcher
         
+    def reboot(self):
+        call(['gksudo','reboot'])
+    
+    def shutdown(self):
+        call(['gksudo','halt'])
+
