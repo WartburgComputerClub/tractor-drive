@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/mainwindow.ui'
 #
-# Created: Fri Mar  1 09:29:03 2013
+# Created: Sun Mar  3 15:51:42 2013
 #      by: PyQt4 UI code generator 4.9.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -85,11 +85,30 @@ class Ui_MainWindow(object):
         self.launchButton.setSizePolicy(sizePolicy)
         self.launchButton.setObjectName(_fromUtf8("launchButton"))
         self.verticalLayout_2.addWidget(self.launchButton)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
+        self.rebootButton = QtGui.QPushButton(self.launchTab)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.rebootButton.sizePolicy().hasHeightForWidth())
+        self.rebootButton.setSizePolicy(sizePolicy)
+        self.rebootButton.setObjectName(_fromUtf8("rebootButton"))
+        self.horizontalLayout_2.addWidget(self.rebootButton)
+        self.shutdownButton = QtGui.QPushButton(self.launchTab)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.shutdownButton.sizePolicy().hasHeightForWidth())
+        self.shutdownButton.setSizePolicy(sizePolicy)
+        self.shutdownButton.setObjectName(_fromUtf8("shutdownButton"))
+        self.horizontalLayout_2.addWidget(self.shutdownButton)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.tabWidget.addTab(self.launchTab, _fromUtf8(""))
         self.verticalLayout.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 20))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
@@ -106,5 +125,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Autostart in ", None))
         self.label_2.setText(_translate("MainWindow", "Seconds", None))
         self.launchButton.setText(_translate("MainWindow", "Launch", None))
+        self.rebootButton.setText(_translate("MainWindow", "Reboot System", None))
+        self.shutdownButton.setText(_translate("MainWindow", "Shutdown System", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.launchTab), _translate("MainWindow", "Launch", None))
 
