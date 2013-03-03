@@ -7,6 +7,7 @@ from pictureitem import PictureItem
 from ConfigParser import ConfigParser
 from serial import Serial
 from os.path import dirname,realpath
+from subprocess import call
 
 class CalibrationWidget(QWidget,Ui_Calibration):
     
@@ -98,9 +99,11 @@ class CalibrationWidget(QWidget,Ui_Calibration):
             self.conf.set('wheel','midpoint',self.midpoint)
             self.conf.set('wheel','left_max',self.left_max)
             self.conf.set('wheel','right_max',self.right_max)
-            fp = open(proj_home + '/global.cfg','w')
+            call(['bash','-c','cp ' + proj_home + '/global.cfg /tmp/global.cfg'])
+            fp = open('/tmp/global.cfg','w')
             self.conf.write(fp)
             fp.close()
+            call(['gksudo','mv /tmp/global.cfg ' + proj_home + '/global.cfg'])
             self.midpoint = 0
             self.left_max = 0
             self.right_max = 0

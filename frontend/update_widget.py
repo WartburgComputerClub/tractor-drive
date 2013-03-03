@@ -19,12 +19,10 @@ class Updater(QThread):
     
     def run(self):
         print "updating"
-        # TODO: Use self.proj_home for these calls
-        call(["git","stash"])
-        p = Popen(["git","pull",self.loc],stdout=PIPE)
+        comm = "git --git-dir=" + self.proj_home + "/.git pull " + self.loc
+        p = Popen(["gksudo",comm],stdout=PIPE)
         output = p.communicate()[0]
         self.updateMessage.emit(output)
-        call(["git","stash","pop"])
         self.finished.emit()
         
     

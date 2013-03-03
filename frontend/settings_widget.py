@@ -99,8 +99,12 @@ class SettingsWidget(QWidget,Ui_Settings):
         conf.set('game','flipThreshold',self.dial.value() * pi /100.0)
         conf.set('game','timeLimit',self.timeEdit.time().second() + self.timeEdit.time().minute()*60)
        
-        fp = open(proj_home + '/global.cfg','w')
+        fp = open('/tmp/global.cfg','w')
         conf.write(fp)
+        fp.close()
+        call(['gksudo','mv /tmp/global.cfg ' + proj_home + '/global.cfg'])
+        QMessageBox.information(self,"Settings Saved","Settings Saved!")
+        
         
     def readSettings(self,filename):
         conf = ConfigParser.ConfigParser()
