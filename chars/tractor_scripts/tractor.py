@@ -100,11 +100,9 @@ class Tractor(bge.types.KX_GameObject):
     def stuck(self):
         '''
         returns true if we detect hat the tractor
-        is stuck on an object. (happens when using
-        the steering wheel)
+        is stuck on an object. 
         '''
-        wheel = self['wheel']
-        if (wheel.connected() and self.active):
+        if self.active:
             resolution = 300
             threshold = .5
             if (self.stuckCount == resolution):

@@ -3,18 +3,30 @@ import bge
 class Bird(bge.types.KX_GameObject):
     
     def __init__(self,old_owner):
-        self.animations = {}
+        self.actmap = {
+            'fly':'flying'
+            }
         pass
     
-    def registerAnimation(self,name,controller,actuator):
-        self.animations[name] = (controller,actuator)
+    def act(self,name):
+        return self.controller.actuators[self.actmap[name]]
+
+    def fly(self):
+        self.controller.activate(self.act('fly'))
+        self.status = 'fly'
     
-    def animate(self,action):
-        if action in self.animations.keys():
-            self.animations[action][0].activate(self.animations[action][1])
+    def idle(self):
+        self.controller.deactivate(self.act(self.status))
+        
+    def update(self):
+        pass
     
 def init(cont):
-    bird = Bird(cont.owner)
-    acts = cont.actuators
-    bird.registerAnimation('fly', cont,acts['flying'])
-    bird.animate('fly')
+    if cont.owner['initialized']:
+        cont.owner.update()
+    else:
+        bird = Bird(cont.owner)
+        bird.controller = cont
+        bird.fly()
+        bird['initialized'] = True
+

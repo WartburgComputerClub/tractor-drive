@@ -50,7 +50,7 @@ class Ram(bge.types.KX_GameObject):
 
     def navigate(self):
         self.turn(0.01)
-    
+        
     def turn(self,angle):
         self.act('motion').dRot = (0,0,angle)
         
