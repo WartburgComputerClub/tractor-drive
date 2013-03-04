@@ -29,6 +29,7 @@ class Sheep(bge.types.KX_GameObject):
             if obj.name == 'sheep_cute':
                 self.flock.append(obj)
         print(len(self.flock),"sheep in the flock.")
+        self.savedVelo = self.worldVelocity()
 
         self.r1 = 5
         self.r2 = 20
@@ -95,6 +96,9 @@ class Sheep(bge.types.KX_GameObject):
     
     def vary(self):
         pass
+
+    def avoidEdgeBegin(self):
+        
             
     
     def turn(self,angle):
