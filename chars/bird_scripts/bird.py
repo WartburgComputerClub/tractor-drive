@@ -14,7 +14,7 @@ class Bird(bge.types.KX_GameObject):
 
     def fly(self):
         self.controller.activate(self.act('fly'))
-        self.act('motion').dLoc = (.01,0,0)
+        self.act('motion').dLoc = (0,.01,.04)
         self.status = 'fly'
     
     def idle(self):
@@ -22,7 +22,7 @@ class Bird(bge.types.KX_GameObject):
         
     def update(self):
         self.controller.activate(self.act('motion'))
-        print(self.worldPosition)
+
     
 def init(cont):
     if cont.owner['initialized']:
