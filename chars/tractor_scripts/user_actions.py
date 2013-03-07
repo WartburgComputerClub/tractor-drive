@@ -32,7 +32,7 @@ def check_dead(cont):
     trac = cont.owner
     if trac.flipped():
         cont.activate(cont.actuators['restart_game'])
-    elif trac.stuck():
+    elif trac.stuck() and not cont.sensors['d'].positive:
         cont.activate(cont.actuators['restart_game'])
     
 def update(a):
@@ -44,7 +44,8 @@ def update(a):
         trac.steer(wheel.getSteer())
     # Cruise control calculations
     trac.cruise_control.update(trac.getSpeed())
-    trac.setPower(trac.cruise_control.getPower())
+    if not a.sensors['d'].positive: # disable cruise control
+        trac.setPower(trac.cruise_control.getPower())
         
     # should we make active
     if not trac.active:
