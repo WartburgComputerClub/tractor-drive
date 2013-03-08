@@ -1,4 +1,5 @@
 import bge
+from mathutils import *
 
 class Bird(bge.types.KX_GameObject):
     
@@ -7,23 +8,67 @@ class Bird(bge.types.KX_GameObject):
             'fly':'flying',
             'motion':'bird_motion',
             }
-        pass
+        self.r1 = 1
+        self.r2 = 5
+        self.vel  = Vector((0,.01,.04))
+        self.alpha = 1
+        self.beta = 1
+        self.gamma = 1
+        self.delta = 1
     
     def act(self,name):
         return self.controller.actuators[self.actmap[name]]
 
     def fly(self):
         self.controller.activate(self.act('fly'))
-        self.act('motion').dLoc = (0,.01,.04)
+
         self.status = 'fly'
     
     def idle(self):
         self.controller.deactivate(self.act(self.status))
         
     def update(self):
-        self.controller.activate(self.act('motion'))
 
-    
+        r1 = []
+        r2 = []
+        scene = bge.logic.getCurrentScene()
+        flock = [ob for ob in scene.objects if 'bird' in ob and ob.worldPosition != self.worldPosition]
+        for i in range(len(flock)):
+            if (flock[i].worldPosition - self.worldPosition).magnitude < self.r1:
+                r1.append(i)
+            elif (flock[i].worldPosition - self.worldPosition).magnitude < self.r2:
+                r2.append(i)
+        
+        # SEPARATION
+        f1 = self.worldPosition
+        sigma = Vector((0,0,0))
+        for s in r1:
+            f2 = flock[s].worldPosition
+            part = (( (f1-f2).normalized())/(f1-f2).magnitude)
+            sigma += part
+        v1 = sigma
+        
+        # ALIGNMENT
+        v2 = Vector((0,0,0))
+        for f in r2:
+            v2 += flock[f].vel
+        if len(r2) > 0:
+            v2 = v2/len(r2)
+        
+        # COHESION
+        sigma = Vector((0,0,0))
+        for f in r2:
+            sigma += flock[f].worldPosition
+        if len(r2) > 0:
+            v3 = sigma / len(r2) - f1
+        else:
+            v3 = Vector((0,0,0))
+
+        self.vel = self.alpha*self.vel.normalized() + self.beta * v1.normalized() + self.gamma * v2.normalized() + self.delta * v3.normalized()
+
+        self.act('motion').dLoc = self.vel
+        self.controller.activate(self.act('motion'))
+        
 def init(cont):
     if cont.owner['initialized']:
         cont.owner.update()
