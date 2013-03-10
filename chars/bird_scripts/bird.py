@@ -8,13 +8,13 @@ class Bird(bge.types.KX_GameObject):
             'fly':'flying',
             'motion':'bird_motion',
             }
-        self.r1 = 1
-        self.r2 = 5
+        self.r1 = 4
+        self.r2 = 40
         self.vel  = Vector((0,.01,.04))
-        self.alpha = 1
-        self.beta = 1
-        self.gamma = 1
-        self.delta = 1
+        self.alpha = .01
+        self.beta = .01
+        self.gamma = .01
+        self.delta = .01
     
     def act(self,name):
         return self.controller.actuators[self.actmap[name]]
@@ -65,6 +65,10 @@ class Bird(bge.types.KX_GameObject):
             v3 = Vector((0,0,0))
 
         self.vel = self.alpha*self.vel.normalized() + self.beta * v1.normalized() + self.gamma * v2.normalized() + self.delta * v3.normalized()
+
+        self.alignAxisToVect(self.vel.normalized(),2,1)
+        # need to align the wings too
+        self.parent.children[0].alignAxisToVect(self.vel.normalized(),2,1)
 
         self.act('motion').dLoc = self.vel
         self.controller.activate(self.act('motion'))
