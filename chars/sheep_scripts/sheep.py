@@ -12,10 +12,12 @@ from time import sleep,time
 
 global obstacles
 global bigObstacles
+global fences
 
 obstacles = []
 bigObstacles = []
 fences = []
+
 for obj in GameLogic.getCurrentScene().objects:
     if obj.name in ['right_side_tree','left_side_tree','small_sphere',
                     'fan_tree','cube','cylinder_tree','chevron_tree']:
@@ -25,6 +27,7 @@ for obj in GameLogic.getCurrentScene().objects:
         bigObstacles.append(obj.worldPosition.copy())
     elif obj.name == 'fence_long':
         fences.append(obj.worldPosition.copy())
+        
 class Sheep(bge.types.KX_GameObject):
     
     def __init__(self,old_owner):
@@ -55,6 +58,8 @@ class Sheep(bge.types.KX_GameObject):
         
         self.grazeTime = time()
         self.hunger = 0
+
+        self.hitTime = time()
 
         self.r1 = 4
         self.r2 = 32
@@ -91,6 +96,7 @@ class Sheep(bge.types.KX_GameObject):
         self.act('motion').dLoc = (0,0,0)
 
     def hit(self):
+        print("HI!")
         if self.status != None:
             self.controller.deactivate(self.act(self.status))
         self.status = 'hit'
@@ -108,7 +114,9 @@ class Sheep(bge.types.KX_GameObject):
 
     def navigate(self):
         x = random()
-        if x < 0.001 and self.status != 'graze' and self.isSafeToGraze():
+        if self.status == 'hit' and time() - self.hitTime < 0.5:
+            self.hit()
+        elif x < 0.001 and self.status != 'graze' and self.isSafeToGraze():
             self.graze()
             self.turn(0)
             self.grazeTime = time()
@@ -211,11 +219,11 @@ class Sheep(bge.types.KX_GameObject):
             dist = (p1 - p2).magnitude
             angle = atan2(p1.y - p2.y,p1.x - p2.x)
             
-            if 0.5*self.r1 < dist < 3*self.r1:
+            if self.r1 < dist < 3*self.r1:
                 size = 2/dist**2
                 result.x = result.x  + size*cos(angle)
                 result.y = result.y + size*sin(angle)
-            elif 0 < dist <= 0.5*self.r1:
+            elif 0 < dist <= self.r1:
                 size = 10/dist**2
                 result.x = result.x  + size*cos(angle)
                 result.y = result.y + size*sin(angle)
@@ -303,6 +311,7 @@ def init(cont):
         sheep = Sheep(cont.owner)
         sheep.controller = cont
         sheep.run()
+        #sheep.controller.activate(sheep.act('helpless'))
         cont.owner['initialized'] = True
     else:
         cont.owner.update()
@@ -349,6 +358,15 @@ def angleFromVectors(v1,v2):
     if (up.dot(crossProd) < 0):
         angle = -angle
     return angle
+
+def wasHit(cont):
+##    flock = [ob for ob in GameLogic.getCurrentScene().objects if 'initialized' in ob]
+##    for sheep in flock:
+##        if sheep.worldPosition == cont.owner.worldPosition:
+##            sheep.hit()
+##            sheep.hitTime = time()
+    cont.owner.hit()
+    cont.owner.hitTime = time()
 
 def sign(num):
     if num >= 0:
