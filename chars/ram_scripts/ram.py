@@ -123,8 +123,7 @@ class Ram(bge.types.KX_GameObject):
     def navigate(self):
         target = self.avoidStatic()*5 + self.vary() + 10*self.aggression()
         temp = self.orientation[:][1].copy()
-        #if time() - self.chargeTime >= 3:
-        if True:
+        if self.status not in ['attack']:
             self.turn(self.decideTurn(temp,target))
         else:
             self.turn(0)
