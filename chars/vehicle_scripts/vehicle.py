@@ -5,6 +5,7 @@
 import bge
 from math import acos
 import mathutils
+from time import time
 
 class Vehicle(bge.types.KX_GameObject):
     
@@ -17,6 +18,7 @@ class Vehicle(bge.types.KX_GameObject):
     def setup(self,settings):
         
         self.settings = settings
+        self.startTime = time()
         
         self.initPhysics()
         
@@ -82,6 +84,12 @@ class Vehicle(bge.types.KX_GameObject):
             if (settings.TIRE_STEER[i]):
                 self.vid.setSteeringValue(value,i)
                 
+    def timedOut(self):
+        if time() - self.startTime > self.settings.TIMEOUT:
+            return True
+        else:
+            return False
+        
     def flipped(self):
         '''
         returns true if we detect that the tractor

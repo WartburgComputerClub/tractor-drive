@@ -83,6 +83,7 @@ BACKWARD_POWER = 30.0
 
 # flip threshold
 FLIP_THRESH = gc.getfloat('game','flipThreshold')
+TIMEOUT = gc.getint('game','timelimit')
 
 CRUISE_CONTROL = {
                   'kp': gc.getfloat('cruise_control','kp'),
