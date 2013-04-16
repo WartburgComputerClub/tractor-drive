@@ -66,7 +66,9 @@ def check_dead(cont):
         cont.activate(cont.actuators['restart_game'])
     elif trac.stuck() and not cont.sensors['d'].positive:
         cont.activate(cont.actuators['restart_game'])
-    
+    elif trac.timedOut():
+        cont.activate(cont.actuators['restart_game'])
+        
 def user_update(a):
     check_dead(a)
     trac = a.owner
