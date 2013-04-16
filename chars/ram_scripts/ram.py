@@ -54,9 +54,14 @@ class Ram(bge.types.KX_GameObject):
         self.blank.y = 0
         self.blank.z = 0
 
+        self.leader = False
+
         self.r1 = 4
         self.r2 = 36
-        
+
+    def hungry(self):
+        return False
+    
     def act(self,name):
         return self.controller.actuators[self.actmap[name]]
 
