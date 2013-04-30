@@ -1,4 +1,5 @@
 from game.types import GameObjectState
+from mathutils import Vector
 from time import time
 
 class IdleState(GameObjectState):
@@ -9,7 +10,10 @@ class IdleState(GameObjectState):
     def update(self):
         owner = self.owner
         if owner.wheel == None:
-            owner.setState(KeyboardState(owner))
+            if owner.debug:
+                owner.setState(DebugState(owner))
+            else:
+                owner.setState(KeyboardState(owner))
         else:
             prev = wheel.getSteer()
             curr = wheel.getSteer()
@@ -25,6 +29,9 @@ class IdleState(GameObjectState):
 
 class WheelState(GameObjectState):
     
+    def enter(self):
+        self.owner.cruise_control.reset()
+
     def update(self):
         owner = self.owner
         #check dead or stuck
@@ -37,6 +44,8 @@ class KeyboardState(GameObjectState):
 
     def update(self):
         owner = self.owner
+        if owner.flipped():
+            owner.reset()
 
         steerLeft = owner.controller.sensors['left']
         steerRight = owner.controller.sensors['right']
@@ -55,5 +64,36 @@ class KeyboardState(GameObjectState):
             owner.backward()
         else:
             owner.setPower(0)
+    
+    def message(self,msg):
+        if self.owner.debug:
+            self.owner.setState(DebugState(self.owner))
             
+class DebugState(GameObjectState):
+
+    def enter(self):
+        self.owner.cruise_control.reset()
+    
+    def update(self):
+        owner = self.owner
+        if owner.flipped():
+            owner.reset()
+            
+        steerLeft = owner.controller.sensors['left']
+        steerRight = owner.controller.sensors['right']
+        if steerRight.positive:
+            turn = -.3
+        elif steerLeft.positive:
+            turn = .3
+        else:
+            turn = 0.0
+        
+        owner.steer(turn)
+        
+        owner.cruise_control.update(owner.getSpeed())
+        owner.setPower(owner.cruise_control.getPower())
+
+    def message(self,msg):
+        if not self.owner.debug:
+            self.owner.setState(KeyboardState(self.owner))
             

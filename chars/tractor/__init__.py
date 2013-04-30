@@ -10,7 +10,10 @@ class Tractor(GameObject):
         self.currState = None
         self.wheel = None
         self.cruise_control = None
-        self.startTime = 0
+        self.startTime = time()
+        self.startPos = self.worldPosition.copy()
+        self.startOrientation = self.orientation.copy()
+        self.debug = False
         self.setState(IdleState(self))
                 
     def setup(self,settings):
@@ -126,5 +129,25 @@ class Tractor(GameObject):
         else:
             return False
 
+    def reset(self):
+        self.worldPosition = self.startPos
+        self.orientation = self.startOrientation
+        self.localLinearVelocity = Vector((0,0,0))
+        self.localAngularVelocity = Vector((0,0,0))
+        self.setState(IdleState(self))
+
+    def update(self):
+        if self.controller.sensors['d'].positive:
+            self.debug = True
+            self.currState.message('')
+        elif self.controller.sensors['f'].positive:
+            self.debug = False
+            self.currState.message('')
+
+        if self.timedOut():
+            self.controller.activate(self.actuators['restart_game'])
+
+        self.currState.update()
+        
 
 from tractor.handles import *
