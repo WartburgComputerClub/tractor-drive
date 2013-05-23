@@ -2,7 +2,6 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from ui_mainwindow import Ui_MainWindow
 from calibration_widget import CalibrationWidget
-from update_widget import UpdateWidget
 from settings_widget import SettingsWidget
 from subprocess import call
 from os.path import dirname,realpath
@@ -33,9 +32,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.currentChanged.connect(self.tabChange)
         self.calibrationWidget = CalibrationWidget()
         self.tabWidget.addTab(self.calibrationWidget,"Calibration")
-        self.updateWidget = UpdateWidget()
-        self.updateWidget.setStatusbar(self.statusbar)
-        self.tabWidget.addTab(self.updateWidget,"Update")
         self.settingsWidget = SettingsWidget(self)
         self.settingsWidget.statusBar = self.statusbar
         self.tabWidget.addTab(self.settingsWidget,"Global Settings")
