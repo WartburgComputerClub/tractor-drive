@@ -1,20 +1,29 @@
-from math import acos
 import bge
 
 from tractor.states import *
+from tractor.sensors import *
 from game.types import GameObject
+from game.sensors import Timer
 
 class Tractor(GameObject):
     
-    def __init__(self,old_owner):
-        self.currState = None
+    def initHook(self):
         self.wheel = None
         self.cruise_control = None
-        self.startTime = time()
         self.startPos = self.worldPosition.copy()
         self.startOrientation = self.orientation.copy()
         self.debug = False
-        self.senses = []
+
+        self.flipSensor = FlipSensor(self)
+        self.activeSensor = ActiveSensor(self)
+        self.timer = Timer(self)
+        self.timer.connect(self.restart)
+        self.timer.activate()
+        self.flipSensor.connect(self.reset)
+        self.addSensor(self.flipSensor)
+        self.addSensor(self.activeSensor)
+        self.addSensor(self.timer)
+
         self.setState(IdleState(self))
                 
     def setup(self,settings):
@@ -32,15 +41,7 @@ class Tractor(GameObject):
         if wheel.connected():
             self.wheel = wheel
 
-    def addSensor(self,sensor):
-        self.senses.append(sensor)
-    
-    def removeSensor(self,sensor):
-        self.senses.remove(sensor)
-
-    def clearSensors(self):
-        del self.senses
-        self.senses = []
+        self.timer.timeout = self.settings.TIMEOUT
 
     def initSusp(self):
         settings = self.settings
@@ -98,27 +99,6 @@ class Tractor(GameObject):
             if (settings.TIRE_STEER[i]):
                 self.vid.setSteeringValue(value,i)
                 
-    def timedOut(self):
-        if time() - self.startTime > self.settings.TIMEOUT:
-            return True
-        else:
-            return False
-        
-    def flipped(self):
-        '''
-        returns true if we detect that the tractor
-        flipped beyond a given threshold and false
-        otherwise
-        '''
-        # get angle between global and local z value
-        val = self.getAxisVect((0,0,1)) 
-        cos_val = val[2]/(val[0]**2 + val[1]**2 + val[2]**2)**(.5)
-        theta = acos(cos_val)
-        if theta > self.settings.FLIP_THRESH:
-            return True
-        else:
-            return False
-        
     def stuck(self):
         '''
         returns true if we detect hat the tractor
@@ -147,7 +127,7 @@ class Tractor(GameObject):
         self.localAngularVelocity = Vector((0,0,0))
         self.setState(IdleState(self))
 
-    def update(self):
+    def updateHook(self):
         if self.controller.sensors['d'].positive:
             self.debug = True
             self.currState.message('')
@@ -155,13 +135,7 @@ class Tractor(GameObject):
             self.debug = False
             self.currState.message('')
 
-        if self.timedOut():
+    def restart(self):
             self.controller.activate(self.actuators['restart_game'])
-
-        for sensor in self.senses:
-            sensor.update()
-
-        self.currState.update()
-        
 
 from tractor.handles import *

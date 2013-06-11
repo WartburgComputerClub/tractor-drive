@@ -1,5 +1,7 @@
-from game.types import GameObjectSensor
 from time import time
+from math import acos
+
+from game.types import GameObjectSensor
 
 # triggers when the steering wheel has been moved slightly
 class ActiveSensor(GameObjectSensor):
@@ -27,3 +29,13 @@ class ActiveSensor(GameObjectSensor):
                 self.activeCount += 1
             self.waitFlag = False
         
+class FlipSensor(GameObjectSensor):
+
+    def update(self):
+        owner = self.owner
+        # get angle between global and local z value
+        val = owner.getAxisVect((0,0,1)) 
+        cos_val = val[2]/(val[0]**2 + val[1]**2 + val[2]**2)**(.5)
+        theta = acos(cos_val)
+        if theta > owner.settings.FLIP_THRESH:
+            self.trigger()

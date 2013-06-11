@@ -1,15 +1,12 @@
 from game.types import GameObjectState
-from tractor.sensors import ActiveSensor
 from mathutils import Vector
 from time import time
 
 class IdleState(GameObjectState):
 
-    def enter(self):
-        self.activeSensor = None
-
     def activate(self):
-        self.owner.removeSensor(self.activeSensor)
+        self.owner.activeSensor.clear()
+        self.owner.activeSensor.deactivate()
         self.owner.setState(WheelState(self.owner))
 
     def update(self):
@@ -20,35 +17,37 @@ class IdleState(GameObjectState):
             else:
                 owner.setState(KeyboardState(owner))
         else:
-            if self.activeSensor == None:
-                self.activeSensor = ActiveSensor(owner)
-                self.activeSensor.connect(self.activate)
-                owner.addSensor(self.activeSensor)
+            if not owner.activeSensor.active:
+                owner.activeSensor.connect(self.activate)
+                owner.activeSensor.activate()
 
     def leave(self):
-        if self.owner.startTime == 0:
-            self.owner.startTime = time()
+        if self.owner.timer.elapsed == 0:
+            self.owner.timer.start()
 
 class WheelState(GameObjectState):
     
     def enter(self):
         self.owner.cruise_control.reset()
+        self.owner.flipSensor.activate()
 
     def update(self):
         owner = self.owner
-        if owner.flipped():
-            owner.reset()
         wheel = self.owner.wheel
         owner.steer(wheel.getSteer())
         owner.cruise_control.update(owner.getSpeed())
         owner.setPower(owner.cruise_control.getPower())
 
+    def leave(self):
+        self.owner.flipSensor.deactivate()
+
 class KeyboardState(GameObjectState):
+
+    def enter(self):
+        self.owner.flipSensor.activate()
 
     def update(self):
         owner = self.owner
-        if owner.flipped():
-            owner.reset()
 
         steerLeft = owner.controller.sensors['left']
         steerRight = owner.controller.sensors['right']
@@ -71,16 +70,18 @@ class KeyboardState(GameObjectState):
     def message(self,msg):
         if self.owner.debug:
             self.owner.setState(DebugState(self.owner))
-            
+
+    def leave(self):
+        self.owner.flipSensor.deactivate()
+
 class DebugState(GameObjectState):
 
     def enter(self):
         self.owner.cruise_control.reset()
+        self.owner.flipSensor.activate()
     
     def update(self):
         owner = self.owner
-        if owner.flipped():
-            owner.reset()
             
         steerLeft = owner.controller.sensors['left']
         steerRight = owner.controller.sensors['right']
@@ -99,4 +100,6 @@ class DebugState(GameObjectState):
     def message(self,msg):
         if not self.owner.debug:
             self.owner.setState(KeyboardState(self.owner))
-            
+
+    def leave(self):
+        self.flipSensor.deactivate()
