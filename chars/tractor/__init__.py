@@ -14,6 +14,7 @@ class Tractor(GameObject):
         self.startPos = self.worldPosition.copy()
         self.startOrientation = self.orientation.copy()
         self.debug = False
+        self.senses = []
         self.setState(IdleState(self))
                 
     def setup(self,settings):
@@ -30,6 +31,16 @@ class Tractor(GameObject):
         wheel = Wheel(settings)
         if wheel.connected():
             self.wheel = wheel
+
+    def addSensor(self,sensor):
+        self.senses.append(sensor)
+    
+    def removeSensor(self,sensor):
+        self.senses.remove(sensor)
+
+    def clearSensors(self):
+        del self.senses
+        self.senses = []
 
     def initSusp(self):
         settings = self.settings
@@ -146,6 +157,9 @@ class Tractor(GameObject):
 
         if self.timedOut():
             self.controller.activate(self.actuators['restart_game'])
+
+        for sensor in self.senses:
+            sensor.update()
 
         self.currState.update()
         

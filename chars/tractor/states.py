@@ -1,11 +1,16 @@
 from game.types import GameObjectState
+from tractor.sensors import ActiveSensor
 from mathutils import Vector
 from time import time
 
 class IdleState(GameObjectState):
 
     def enter(self):
-        self.activeCount = 0
+        self.activeSensor = None
+
+    def activate(self):
+        self.owner.removeSensor(self.activeSensor)
+        self.owner.setState(WheelState(self.owner))
 
     def update(self):
         owner = self.owner
@@ -15,13 +20,10 @@ class IdleState(GameObjectState):
             else:
                 owner.setState(KeyboardState(owner))
         else:
-            prev = wheel.getSteer()
-            curr = wheel.getSteer()
-            if abs(prev - curr) > .01:
-                if self.activeCount > 2:
-                    owner.setState(WheelState(owner))
-                else:
-                    self.activeCount += 1
+            if self.activeSensor == None:
+                self.activeSensor = ActiveSensor(owner)
+                self.activeSensor.connect(self.activate)
+                owner.addSensor(self.activeSensor)
 
     def leave(self):
         if self.owner.startTime == 0:
@@ -34,7 +36,8 @@ class WheelState(GameObjectState):
 
     def update(self):
         owner = self.owner
-        #check dead or stuck
+        if owner.flipped():
+            owner.reset()
         wheel = self.owner.wheel
         owner.steer(wheel.getSteer())
         owner.cruise_control.update(owner.getSpeed())

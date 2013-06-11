@@ -33,3 +33,22 @@ class GameObjectState:
     
     def message(self,msg):
         pass
+
+class GameObjectSensor:
+    
+    def __init__(self,owner):
+        self.owner = owner
+        self.callbacks = []
+        self.setup()
+
+    def setup(self):
+        pass
+    def update(self):
+        pass
+
+    def connect(self,callback):
+        self.callbacks.append(callback)
+
+    def trigger(self):
+        for callback in self.callbacks:
+            callback()
