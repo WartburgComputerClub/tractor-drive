@@ -3,10 +3,29 @@ from math import acos
 
 from game.types import GameObjectSensor
 
+class StuckSensor(GameObjectSensor):
+    
+    def initHook(self):
+        self.stuckCount = 0
+        self.vel = []
+
+    def update(self):
+        resolution = 300
+        threshold = .5
+        if (self.stuckCount == resolution):
+            average = sum(self.vel)/len(self.vel)
+            if average < threshold:
+                self.trigger()
+            self.stuckCount = 0
+            self.vel = []
+        else:
+            self.stuckCount += 1
+            self.vel.append(self.owner.getLinearVelocity().magnitude)
+
 # triggers when the steering wheel has been moved slightly
 class ActiveSensor(GameObjectSensor):
     
-    def setup(self):
+    def initHook(self):
         self.activeCount = 0
         self.waitFlag = False
         self.prevTime = time()*2

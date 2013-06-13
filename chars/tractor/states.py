@@ -5,7 +5,7 @@ from time import time
 class IdleState(GameObjectState):
 
     def activate(self):
-        self.owner.activeSensor.clear()
+        self.owner.activeSensor.clear()               # clear all connections
         self.owner.activeSensor.deactivate()
         self.owner.setState(WheelState(self.owner))
 
@@ -30,6 +30,7 @@ class WheelState(GameObjectState):
     def enter(self):
         self.owner.cruise_control.reset()
         self.owner.flipSensor.activate()
+        self.owner.stuckSensor.activate()
 
     def update(self):
         owner = self.owner
@@ -40,6 +41,7 @@ class WheelState(GameObjectState):
 
     def leave(self):
         self.owner.flipSensor.deactivate()
+        self.owner.stuckSensor.deactivate()
 
 class KeyboardState(GameObjectState):
 
@@ -79,6 +81,7 @@ class DebugState(GameObjectState):
     def enter(self):
         self.owner.cruise_control.reset()
         self.owner.flipSensor.activate()
+        self.owner.stuckSensor.activate()
     
     def update(self):
         owner = self.owner
@@ -102,4 +105,6 @@ class DebugState(GameObjectState):
             self.owner.setState(KeyboardState(self.owner))
 
     def leave(self):
-        self.flipSensor.deactivate()
+        self.owner.flipSensor.deactivate()
+        self.owner.stuckSensor.deactivate()
+

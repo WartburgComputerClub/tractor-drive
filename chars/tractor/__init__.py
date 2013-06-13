@@ -16,13 +16,16 @@ class Tractor(GameObject):
 
         self.flipSensor = FlipSensor(self)
         self.activeSensor = ActiveSensor(self)
+        self.stuckSensor = StuckSensor(self)
         self.timer = Timer(self)
         self.timer.connect(self.restart)
         self.timer.activate()
         self.flipSensor.connect(self.reset)
+        self.stuckSensor.connect(self.reset)
         self.addSensor(self.flipSensor)
         self.addSensor(self.activeSensor)
         self.addSensor(self.timer)
+        self.addSensor(self.stuckSensor)
 
         self.setState(IdleState(self))
                 
@@ -99,27 +102,6 @@ class Tractor(GameObject):
             if (settings.TIRE_STEER[i]):
                 self.vid.setSteeringValue(value,i)
                 
-    def stuck(self):
-        '''
-        returns true if we detect hat the tractor
-        is stuck on an object. 
-        '''
-        if self.active:
-            resolution = 300
-            threshold = .5
-            if (self.stuckCount == resolution):
-                average = sum(self.vel)/len(self.vel)
-                if (average) < threshold:
-                    return True
-                self.stuckCount = 0
-                self.vel = []
-            else:
-                self.stuckCount += 1
-                self.vel.append(self.getLinearVelocity().magnitude)
-            return False
-        else:
-            return False
-
     def reset(self):
         self.worldPosition = self.startPos
         self.orientation = self.startOrientation

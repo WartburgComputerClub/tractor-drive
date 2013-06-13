@@ -4,7 +4,7 @@ from game.types import GameObjectSensor
 
 class Timer(GameObjectSensor):
 
-    def setup(self):
+    def initHook(self):
         self.timeout = 0
         self.elapsed = 0
         self.prev = time()

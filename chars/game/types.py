@@ -57,9 +57,9 @@ class GameObjectSensor:
         self.owner = owner
         self.callbacks = []
         self.active = False
-        self.setup()
+        self.initHook()
 
-    def setup(self):
+    def initHook(self):
         pass
 
     def update(self):
