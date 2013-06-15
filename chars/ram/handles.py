@@ -1,10 +1,12 @@
 import bge
 
 from ram import Ram
+from ram.states import WanderState
 
 def init(cont):
-    cont.owner['controller'] = cont
     ram = Ram(cont.owner)
+    cont.owner.controller = cont
+    ram.setState(WanderState(ram))
     cont.owner['initialized'] = True
 
 def update(cont):

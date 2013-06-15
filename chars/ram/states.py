@@ -15,10 +15,12 @@ class WanderState(GameObjectState):
     def update(self):
         owner = self.owner
         print("wander")
-        print(Environment.getInstance().staticAvoidanceVector(owner))
         #if owner.distanceToTractor() <= self.r2:
         #    owner.setState(AttackState(owner))
-        #owner.iterTurn(5*owner.environment.staticAvoidanceVector(owner) + owner.randomDirectionVector())
+        avoidance = Environment.getInstance().staticAvoidanceVector(owner.worldPosition)
+        randomness = owner.randomDirectionVector()
+        print(randomness)
+        owner.iterTurn(5*avoidance + randomness)
         
 class AttackState(GameObjectState):
     

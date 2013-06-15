@@ -30,8 +30,7 @@ class Environment:
         return Environment.instance
         
     def staticAvoidanceVector(self,playerPos):
-        playerPos = playerPos.worldPosition
-        p1 = playerPos
+        p1 = playerPos.copy()
         p1.z = 0
         result = Vector((0,0,0))
         for v in self.obstacles:

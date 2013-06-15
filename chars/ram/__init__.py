@@ -22,8 +22,6 @@ class Ram(AnimatedGameObject):
             ('attack','ram_attack'),
             ('motion','ram_motion')])
             
-        self.setState(WanderState(self))
-            
     def setVelocity(self,vel):
         self.act('motion').dLoc = vel
         
@@ -85,8 +83,8 @@ class Ram(AnimatedGameObject):
     def turn(self,angle):
         self.act('motion').dRot = (0,0,angle)
         
-    def update(self):
-        self.currState.update()
-        self['controller'].activate(self.act('motion'))
+    def updateHook(self):
+        self.controller.activate(self.act('motion'))
+        print(self.act('motion').dLoc)
     
 from ram.handles import *

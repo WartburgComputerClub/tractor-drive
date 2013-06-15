@@ -234,6 +234,7 @@ class Ram(bge.types.KX_GameObject):
     def update(self):
         self.navigate()
         self.controller.activate(self.act('motion'))
+        print(self.act('motion').dLoc)
         #print(self.status, "at", self.worldPosition)
     
 def init(cont):

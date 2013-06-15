@@ -52,12 +52,12 @@ class AnimatedGameObject(GameObject):
 
     def setAnimation(self,newAnim):
         if self.currAnimation != None:    
-            self['controller'].deactivate(self.act(self.currAnimation))
+            self.controller.deactivate(self.act(self.currAnimation))
         self.currAnimation = newAnim
-        self['controller'].activate(self.act(newAnim))
+        self.controller.activate(self.act(newAnim))
         
     def act(self,name):
-        return self['controller'].actuators[self.actmap[name]]
+        return self.controller.actuators[self.actmap[name]]
     
         
 class GameObjectState:
