@@ -34,6 +34,32 @@ class GameObject(bge.types.KX_GameObject):
     def addSensor(self,sensor):
         self.senses.append(sensor)
 
+class AnimatedGameObject(GameObject):
+
+    def __init__(self,old_owner):
+        self.currState = None
+        self.currAnimation = None
+        self.actmap = {}
+        self.senses = []
+        self.initHook()
+
+    def registerAnimation(self,name,actuatorName):
+        self.actmap[name] = actuatorName
+
+    def registerAnimations(self,mappedTuples):
+        for mapping in mappedTuples:
+            self.registerAnimation(mapping[0],mapping[1])
+
+    def setAnimation(self,newAnim):
+        if self.currAnimation != None:    
+            self['controller'].deactivate(self.act(self.currAnimation))
+        self.currAnimation = newAnim
+        self['controller'].activate(self.act(newAnim))
+        
+    def act(self,name):
+        return self['controller'].actuators[self.actmap[name]]
+    
+        
 class GameObjectState:
     
     def __init__(self,owner):

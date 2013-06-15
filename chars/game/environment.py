@@ -1,7 +1,11 @@
 import GameLogic
 from mathutils import Vector
+from math import atan2,pi
+from random import random
 
 class Environment:
+
+    instance = None
     
     def __init__(self):
         self.r1 = 4
@@ -9,7 +13,6 @@ class Environment:
         self.bigObstacles = []
         self.obstacles = []
         self.fences = []
-        
         for obj in GameLogic.getCurrentScene().objects:
             if obj.name in ['right_side_tree','left_side_tree','small_sphere',
                     'fan_tree','cube','cylinder_tree','chevron_tree']:
@@ -20,7 +23,14 @@ class Environment:
             elif obj.name == 'fence_long':
                 self.fences.append(obj.worldPosition.copy())   
 
+    @staticmethod
+    def getInstance():
+        if Environment.instance == None:
+            Environment.instance = Environment()
+        return Environment.instance
+        
     def staticAvoidanceVector(self,playerPos):
+        playerPos = playerPos.worldPosition
         p1 = playerPos
         p1.z = 0
         result = Vector((0,0,0))

@@ -1,9 +1,10 @@
 import bge
+
 from ram import Ram
 
 def init(cont):
+    cont.owner['controller'] = cont
     ram = Ram(cont.owner)
-    cont.owner.controller = cont
     cont.owner['initialized'] = True
 
 def update(cont):

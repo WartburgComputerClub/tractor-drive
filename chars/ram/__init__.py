@@ -1,35 +1,29 @@
 import bge
+import GameLogic
+from mathutils import Vector
+from random import random
+from math import cos,sin,copysign,atan2
 
-from game.types import GameObject
+from game.types import AnimatedGameObject
+from game.environment import Environment
+from ram.states import *
 
-class Ram(GameObject):
+class Ram(AnimatedGameObject):
 
     def initHook(self):
-        self.currAnimation = None
-        self.actmap = {
-                       'walk':'ram_walk',
-                       'run': 'ram_run',
-                       'graze':'ram_graze',
-                       'helpless':'ram_helpless',
-                       'hit':'hit_ram',
-                       'flounder':'ram_flounder',
-                       'drown':'ram_drown',
-                       'attack':'ram_attack',
-                       'motion':'ram_motion'
-                       }
-        
+        self.registerAnimations([
+            ('walk','ram_walk'),
+            ('run','ram_run'),
+            ('graze','ram_graze'),
+            ('helpless','ram_helpless'),
+            ('hit','hit_ram'),
+            ('flounder','ram_flounder'),
+            ('drown','ram_drown'),
+            ('attack','ram_attack'),
+            ('motion','ram_motion')])
+            
         self.setState(WanderState(self))
-        
-
-    def setAnimation(self,newAnim):
-        if self.currAnimation != None:    
-            self['controller'].deactivate(self.act(self.currAnimation))
-        self.currAnimation = newAnim
-        self['controller'].activate(self.act(newAnim))
-        
-    def act(self,name):
-        return self['controller'].actuators[self.actmap[name]]
-    
+            
     def setVelocity(self,vel):
         self.act('motion').dLoc = vel
         
