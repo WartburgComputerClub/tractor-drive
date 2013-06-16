@@ -10,7 +10,7 @@ class WanderState(GameObjectState):
     
     def enter(self):
         self.owner.setAnimation('walk')
-        self.owner.setVelocity((0, 0.02, 0))
+        self.owner.setVelocity((0, 0.02))
 
     def update(self):
         owner = self.owner
@@ -19,7 +19,6 @@ class WanderState(GameObjectState):
         #    owner.setState(AttackState(owner))
         avoidance = Environment.getInstance().staticAvoidanceVector(owner.worldPosition)
         randomness = owner.randomDirectionVector()
-        print(randomness)
         owner.iterTurn(5*avoidance + randomness)
         
 class AttackState(GameObjectState):

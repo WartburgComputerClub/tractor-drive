@@ -1,6 +1,6 @@
 import GameLogic
 from mathutils import Vector
-from math import atan2,pi
+from math import atan2,pi,cos,sin
 from random import random
 
 class Environment:
@@ -30,6 +30,15 @@ class Environment:
         return Environment.instance
         
     def staticAvoidanceVector(self,playerPos):
+        '''find an avoidance vector for static objects in scene
+
+        Parameters:
+        playerPos -- the 3D Vector of the player's position
+       
+        Returns:
+        2D Vector describing a way to avoid the static 
+        objects in the scene (fences, houses, trees,...)
+        '''
         p1 = playerPos.copy()
         p1.z = 0
         result = Vector((0,0,0))
@@ -77,5 +86,5 @@ class Environment:
                 size = 10/dist**2
                 result.x = result.x  + size*cos(angle)
                 result.y = result.y + size*sin(angle)
-        return result
+        return Vector((result.x,result.y))
         
