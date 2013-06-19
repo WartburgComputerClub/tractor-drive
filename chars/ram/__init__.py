@@ -53,8 +53,10 @@ class Ram(AnimatedGameObject):
         return dist
     
     def vectorToTractor(self):
-        angle = self.angleToTractor()
-        vec = Vector((cos(angle),sin(angle)))
+        tractor = GameLogic.getCurrentScene().objects['tractor']
+        p1 = self.worldPosition.copy()
+        p2 = tractor.worldPosition.copy()
+        vec = Vector((p2.x - p1.x,p2.y - p1.y))
         return vec
 
     def randomDirectionVector(self):
@@ -64,11 +66,12 @@ class Ram(AnimatedGameObject):
 
     def iterTurn(self,target):
         temp = self.orientation[:][1].copy()
-        temp = Vector((temp.x,temp.y))
+        temp = Vector((temp.x,-1*temp.y))
         self.turn(self.decideTurn(temp,target))
         
     def decideTurn(self,current,target):
         toTurn = current.angle_signed(target)
+        print(toTurn*180/pi)
         if abs(toTurn) > 2*pi/3:
             return copysign(0.05,toTurn)
         elif abs(toTurn) > pi/2:
@@ -77,9 +80,9 @@ class Ram(AnimatedGameObject):
             return 0
         else:
             return copysign(0.02,toTurn)
-        
+
     def turn(self,angle):
-        self.act('motion').dRot = (0,0,angle)
+        self.act('motion').dRot = (0,0,angle*-1)
         
     def updateHook(self):
         self.controller.activate(self.act('motion'))
