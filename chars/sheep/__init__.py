@@ -1,10 +1,10 @@
 import bge
 import GameLogic
 
-from game.types import AnimatedGameObject
+from game.types import LandAnimal
 from sheep.states import *
 
-class Sheep(AnimatedGameObject):
+class Sheep(LandAnimal):
     
     def initHook(self):
         self.registerAnimations([
@@ -21,7 +21,6 @@ class Sheep(AnimatedGameObject):
     def setVelocity(self,vel):
         self.act('motion').dLoc = (vel[0],vel[1],0)
 
-        
     def updateHook(self):
         self.controller.activate(self.act('motion'))
 

@@ -1,4 +1,8 @@
 import bge
+import GameLogic
+from mathutils import Vector
+from random import random
+from math import cos,sin,copysign,atan2,pi
 
 class GameObject(bge.types.KX_GameObject):
     
@@ -34,14 +38,14 @@ class GameObject(bge.types.KX_GameObject):
     def addSensor(self,sensor):
         self.senses.append(sensor)
 
+        
+
 class AnimatedGameObject(GameObject):
 
     def __init__(self,old_owner):
-        self.currState = None
         self.currAnimation = None
         self.actmap = {}
-        self.senses = []
-        self.initHook()
+        super().__init__(old_owner)
 
     def registerAnimation(self,name,actuatorName):
         self.actmap[name] = actuatorName
@@ -107,3 +111,78 @@ class GameObjectSensor:
     def clear(self):
         del self.callbacks
         self.callbacks = []
+
+class LandAnimal(AnimatedGameObject):
+
+    def __init__(self,old_owner):
+        self.walkVelocity = 0.02
+        self.runVelocity = 0.04
+        super().__init__(old_owner)
+
+    def tractorAimError(self):
+        tractor = GameLogic.getCurrentScene().objects['tractor']
+        p1 = self.worldPosition.copy()
+        p1 = Vector((p1.x,p1.y))
+        p2 = tractor.worldPosition.copy()
+        p2 = Vector((p2.x,p2.y))
+        v1 = self.orientation[:][1].copy()
+        v1 = Vector((v1.x,v1.y))
+        v2 = p2 - p1
+        return abs(v1.angle_signed(v2))
+    
+    def angleToTractor(self):
+        tractor = GameLogic.getCurrentScene().objects['tractor']
+        p1 = self.worldPosition.copy()
+        p2 = tractor.worldPosition.copy()
+        return atan2(p2.y - p1.y, p2.x - p1.x)
+    
+    def distanceToTractor(self):
+        tractor = GameLogic.getCurrentScene().objects['tractor']
+        p1 = self.worldPosition.copy()
+        p1.z = 0
+        result = Vector((0,0,0))
+        p2 = tractor.worldPosition.copy()
+        p2.z = 0
+        dist = (p1-p2).magnitude
+        return dist
+    
+    def vectorToTractor(self):
+        tractor = GameLogic.getCurrentScene().objects['tractor']
+        p1 = self.worldPosition.copy()
+        p2 = tractor.worldPosition.copy()
+        vec = Vector((p2.x - p1.x,p2.y - p1.y))
+        return vec
+
+    def randomDirectionVector(self):
+        theta = random() * 2*pi
+        temp = Vector((cos(theta),sin(theta)))
+        return temp
+
+    def iterTurn(self,target):
+        temp = self.orientation[:][1].copy()
+        temp = Vector((temp.x,-1*temp.y))
+        self.turn(self.decideTurn(temp,target))
+        
+    def decideTurn(self,current,target):
+        toTurn = current.angle_signed(target)
+        print(toTurn*180/pi)
+        if abs(toTurn) > 2*pi/3:
+            return copysign(0.05,toTurn)
+        elif abs(toTurn) > pi/2:
+            return copysign(0.03,toTurn)
+        elif abs(toTurn) == 0:
+            return 0
+        else:
+            return copysign(0.02,toTurn)
+
+    def walk(self,velocity=None):
+        if velocity == None:
+            velocity = self.walkVelocity
+        self.setAnimation('walk')
+        self.setVelocity((0,velocity))
+
+    def run(self,velocity=None):
+        if velocity == None:
+            velocity = self.runVelocity
+        self.setAnimation('run')
+        self.setVelocity((0,velocity))
