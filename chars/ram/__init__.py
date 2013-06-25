@@ -11,25 +11,17 @@ from ram.states import *
 class Ram(LandAnimal):
 
     def initHook(self):
+        acts = self.controller.actuators
         self.registerAnimations([
-            ('walk','ram_walk'),
-            ('run','ram_run'),
-            ('graze','ram_graze'),
-            ('helpless','ram_helpless'),
-            ('hit','hit_ram'),
-            ('flounder','ram_flounder'),
-            ('drown','ram_drown'),
-            ('attack','ram_attack'),
-            ('motion','ram_motion')])
+            ('walk',acts['ram_walk']),
+            ('run',acts['ram_run']),
+            ('graze',acts['ram_graze']),
+            ('helpless',acts['ram_helpless']),
+            ('hit',acts['hit_ram']),
+            ('flounder',acts['ram_flounder']),
+            ('drown',acts['ram_drown']),
+            ('attack',acts['ram_attack'])])
+        self.motion = acts['ram_motion']
         self.runVelocity = 0.07
             
-    def setVelocity(self,vel):
-        self.act('motion').dLoc = (vel[0],vel[1],0)
-        
-    def turn(self,angle):
-        self.act('motion').dRot = (0,0,angle*-1)
-        
-    def updateHook(self):
-        self.controller.activate(self.act('motion'))
-    
 from ram.handles import *

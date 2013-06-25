@@ -8,4 +8,5 @@ class WanderState(GameObjectState):
         
     def update(self):
         owner = self.owner
-    
+        owner.iterTurn(owner.vectorToTractor())
+        

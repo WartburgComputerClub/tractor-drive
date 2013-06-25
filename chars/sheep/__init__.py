@@ -7,21 +7,17 @@ from sheep.states import *
 class Sheep(LandAnimal):
     
     def initHook(self):
+        acts = self.controller.actuators
         self.registerAnimations([
-            ('walk','sheep_walk'),
-            ('run','sheepcute_run'),
-            ('graze','sheep_graze'),
-            ('helpless','sheepcute_helpless'),
-            ('hit','hit_sheep'),
-            ('flounder', 'sheep_flounder'),
-            ('puff','sheep_puff'),
-            ('drown','sheep_drown'),
-            ('motion','sheep_motion')])
-
-    def setVelocity(self,vel):
-        self.act('motion').dLoc = (vel[0],vel[1],0)
-
-    def updateHook(self):
-        self.controller.activate(self.act('motion'))
-
+            ('walk',acts['sheep_walk']),
+            ('run',acts['sheepcute_run']),
+            ('graze',acts['sheep_graze']),
+            ('helpless',acts['sheepcute_helpless']),
+            ('hit',acts['hit_sheep']),
+            ('flounder', acts['sheep_flounder']),
+            ('puff',acts['sheep_puff']),
+            ('drown',acts['sheep_drown']),
+            ('motion',acts['sheep_motion'])])
+        self.motion = acts['sheep_motion']
+        
 from sheep.handles import *

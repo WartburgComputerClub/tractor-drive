@@ -5,7 +5,6 @@ from ram.states import WanderState
 
 def init(cont):
     ram = Ram(cont.owner)
-    cont.owner.controller = cont
     ram.setState(WanderState(ram))
     cont.owner['initialized'] = True
 

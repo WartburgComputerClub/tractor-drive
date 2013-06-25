@@ -9,6 +9,7 @@ class GameObject(bge.types.KX_GameObject):
     def __init__(self,old_owner):
         self.currState = None
         self.senses = []
+        self.controller = bge.logic.getCurrentController()
         self.initHook()
 
     def initHook(self):
@@ -38,31 +39,26 @@ class GameObject(bge.types.KX_GameObject):
     def addSensor(self,sensor):
         self.senses.append(sensor)
 
-        
-
 class AnimatedGameObject(GameObject):
 
     def __init__(self,old_owner):
         self.currAnimation = None
-        self.actmap = {}
+        # mapping of animation name to actuator
+        self.animations = {}
         super().__init__(old_owner)
 
+    def setAnimation(self,newAnim):
+        if self.currAnimation != None:    
+            self.controller.deactivate(self.animations[self.currAnimation])
+        self.currAnimation = newAnim
+        self.controller.activate(self.animations[newAnim])
+
     def registerAnimation(self,name,actuatorName):
-        self.actmap[name] = actuatorName
+        self.animations[name] = actuatorName
 
     def registerAnimations(self,mappedTuples):
         for mapping in mappedTuples:
             self.registerAnimation(mapping[0],mapping[1])
-
-    def setAnimation(self,newAnim):
-        if self.currAnimation != None:    
-            self.controller.deactivate(self.act(self.currAnimation))
-        self.currAnimation = newAnim
-        self.controller.activate(self.act(newAnim))
-        
-    def act(self,name):
-        return self.controller.actuators[self.actmap[name]]
-    
         
 class GameObjectState:
     
@@ -117,9 +113,15 @@ class LandAnimal(AnimatedGameObject):
     def __init__(self,old_owner):
         self.walkVelocity = 0.02
         self.runVelocity = 0.04
+        # motion actuator (should be set in initHook)
+        self.motion = None
         super().__init__(old_owner)
 
     def tractorAimError(self):
+        '''
+        Return the angle between the vector the animal is
+        facing, and the vector from the animal to the tractor.
+        '''
         tractor = GameLogic.getCurrentScene().objects['tractor']
         p1 = self.worldPosition.copy()
         p1 = Vector((p1.x,p1.y))
@@ -165,7 +167,6 @@ class LandAnimal(AnimatedGameObject):
         
     def decideTurn(self,current,target):
         toTurn = current.angle_signed(target)
-        print(toTurn*180/pi)
         if abs(toTurn) > 2*pi/3:
             return copysign(0.05,toTurn)
         elif abs(toTurn) > pi/2:
@@ -186,3 +187,14 @@ class LandAnimal(AnimatedGameObject):
             velocity = self.runVelocity
         self.setAnimation('run')
         self.setVelocity((0,velocity))
+
+    def turn(self,angle):
+        self.motion.dRot = (0,0,angle*-1)
+
+    def setVelocity(self,vel):
+        self.motion.dLoc = (vel[0],vel[1],0)
+
+    def update(self):
+        self.controller.activate(self.motion)
+        super().update()
+
