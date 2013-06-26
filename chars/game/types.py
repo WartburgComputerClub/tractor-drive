@@ -39,6 +39,26 @@ class GameObject(bge.types.KX_GameObject):
     def addSensor(self,sensor):
         self.senses.append(sensor)
 
+    def avoidanceVector(self,fear):
+        '''find an vector that will avoid a named object in 
+        the current scene
+        '''
+
+        if not fear in GameLogic.getCurrentScene().objects:
+            return Vector((0,0)) # object was not found
+            
+        fearObj = GameLogic.getCurrentScene().objects[fear]
+        fearPos = fearObj.worldPosition.copy()
+        theta = atan2(self.worldPosition[1] - fearPos.y,self.worldPosition[0] - fearPos.x)
+        return(Vector((cos(theta),sin(theta))))
+        
+    def distance(self,objName):
+        '''return distance to named object in scene'''
+        obj = GameLogic.getCurrentScene().objects[objName]
+        objPos = obj.worldPosition
+        
+        return (Vector((objPos.x,objPos.y)) - Vector((self.worldPosition.x,self.worldPosition.y))).magnitude
+
 class AnimatedGameObject(GameObject):
 
     def __init__(self,old_owner):

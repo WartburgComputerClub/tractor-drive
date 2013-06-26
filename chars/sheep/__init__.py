@@ -16,8 +16,14 @@ class Sheep(LandAnimal):
             ('hit',acts['hit_sheep']),
             ('flounder', acts['sheep_flounder']),
             ('puff',acts['sheep_puff']),
-            ('drown',acts['sheep_drown']),
-            ('motion',acts['sheep_motion'])])
+            ('drown',acts['sheep_drown'])])
         self.motion = acts['sheep_motion']
-        
+
+    def flounder(self,velocity=0.035):
+        self.setAnimation('flounder')
+        self.setVelocity((0,velocity))
+
+    def updateHook(self):
+        self.flock = [ob for ob in GameLogic.getCurrentScene().objects if ob.name == 'sheep_cute']
+    
 from sheep.handles import *
