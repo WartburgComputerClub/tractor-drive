@@ -78,6 +78,9 @@ class FlockState(GameObjectState):
             avoidance += owner.avoidanceVector('tractor')*(5/tractorDist**2)
             if avoidance.magnitude > 0.05:
                 owner.run()
+                self.direction += avoidance*10
+                return
+        
         if avoidance.magnitude > 0.04:
             owner.flounder()
         else:
