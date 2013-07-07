@@ -24,8 +24,8 @@ class FlockState(GameObjectState):
         self.direction = Vector((0,0))
 
         self.avoid()
-        #self.center()
-        #self.match()
+        self.center()
+        self.match()
         self.vary()
 
         owner.iterTurn(self.direction)
@@ -56,7 +56,7 @@ class FlockState(GameObjectState):
             p2 = Vector((sheep.worldPosition.x,sheep.worldPosition.y))
             dist = (p1 - p2).magnitude
             theta = atan2(p1.y - p2.y,p1.x - p2.x)
-            if 0 < dist < self.r1:
+            if .001 < dist < self.r1:
                 size = 1/dist**2
                 avoidance.x += size*cos(theta)
                 avoidance.y += size*sin(theta)

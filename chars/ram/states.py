@@ -45,3 +45,5 @@ class AttackState(GameObjectState):
             owner.setAnimation('attack')
             owner.setVelocity((0, 0.07))
             owner.turn(0)
+        else:
+            owner.setState(WanderState(owner))

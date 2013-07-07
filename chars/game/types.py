@@ -148,7 +148,7 @@ class LandAnimal(AnimatedGameObject):
         p2 = tractor.worldPosition.copy()
         p2 = Vector((p2.x,p2.y))
         v1 = self.orientation[:][1].copy()
-        v1 = Vector((v1.x,v1.y))
+        v1 = Vector((v1.x,v1.y*-1))
         v2 = p2 - p1
         return abs(v1.angle_signed(v2))
     
