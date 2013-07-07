@@ -45,7 +45,7 @@ class FlockState(GameObjectState):
         centering /= close
         toCenter = centering - p1
         toCenter.normalize()
-        self.direction += 4 * centering
+        self.direction += 4 * toCenter
 
     def avoid(self):
         owner = self.owner
