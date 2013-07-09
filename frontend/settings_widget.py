@@ -102,7 +102,7 @@ class SettingsWidget(QWidget,Ui_Settings):
         fp = open('/tmp/global.cfg','w')
         conf.write(fp)
         fp.close()
-        call(['kdesu','-c','mv /tmp/global.cfg ' + proj_home + '/global.cfg'])
+        call(['kdesudo','-c','mv /tmp/global.cfg ' + proj_home + '/global.cfg'])
         QMessageBox.information(self,"Settings Saved","Settings Saved!")
         
         
