@@ -18,10 +18,12 @@ class Environment:
                     'fan_tree','cube','cylinder_tree','chevron_tree']:
                 self.obstacles.append(obj.worldPosition.copy())
             elif obj.name in ['water','square_house','Front House','L_house','shed',
-                              'large_square_house','front_left_house','asymm_shed']:
+                              'large_square_house','front_left_house','asymm_shed','small_house','small_house.001','House','Barn','bridge']:
                 self.bigObstacles.append(obj.worldPosition.copy())
             elif obj.name == 'fence_long':
                 self.fences.append(obj.worldPosition.copy())   
+            elif obj.name.startswith('water'):
+                self.obstacles.append(obj.worldPosition.copy())
 
     @staticmethod
     def getInstance():
