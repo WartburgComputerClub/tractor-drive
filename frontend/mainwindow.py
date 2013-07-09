@@ -67,8 +67,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.launcher = launcher
         
     def reboot(self):
-        call(['gksudo','reboot'])
+        call(['kdesu','-c','reboot'])
     
     def shutdown(self):
-        call(['gksudo','halt'])
+        call(['kdesu','-c','halt'])
 

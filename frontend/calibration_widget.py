@@ -103,7 +103,7 @@ class CalibrationWidget(QWidget,Ui_Calibration):
             fp = open('/tmp/global.cfg','w')
             self.conf.write(fp)
             fp.close()
-            call(['gksudo','mv /tmp/global.cfg ' + proj_home + '/global.cfg'])
+            call(['kdesu','-c','mv /tmp/global.cfg ' + proj_home + '/global.cfg'])
             self.midpoint = 0
             self.left_max = 0
             self.right_max = 0
