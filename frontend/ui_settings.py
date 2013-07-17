@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/settings.ui'
 #
-# Created: Fri Mar  1 09:29:04 2013
+# Created: Sat Jul 13 17:18:20 2013
 #      by: PyQt4 UI code generator 4.9.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -242,8 +242,31 @@ class Ui_Settings(object):
         self.verticalLayout_8.addWidget(self.groupBox_3)
         self.groupBox_4 = QtGui.QGroupBox(Settings)
         self.groupBox_4.setObjectName(_fromUtf8("groupBox_4"))
-        self.verticalLayout_7 = QtGui.QVBoxLayout(self.groupBox_4)
+        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.groupBox_4)
+        self.horizontalLayout_6.setObjectName(_fromUtf8("horizontalLayout_6"))
+        self.groupBox = QtGui.QGroupBox(self.groupBox_4)
+        self.groupBox.setObjectName(_fromUtf8("groupBox"))
+        self.verticalLayout_7 = QtGui.QVBoxLayout(self.groupBox)
         self.verticalLayout_7.setObjectName(_fromUtf8("verticalLayout_7"))
+        self.horizontalLayout_7 = QtGui.QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(_fromUtf8("horizontalLayout_7"))
+        self.sensitivitySlider = QtGui.QSlider(self.groupBox)
+        self.sensitivitySlider.setMaximum(100)
+        self.sensitivitySlider.setProperty("value", 0)
+        self.sensitivitySlider.setSliderPosition(0)
+        self.sensitivitySlider.setOrientation(QtCore.Qt.Vertical)
+        self.sensitivitySlider.setTickPosition(QtGui.QSlider.TicksBelow)
+        self.sensitivitySlider.setTickInterval(10)
+        self.sensitivitySlider.setObjectName(_fromUtf8("sensitivitySlider"))
+        self.horizontalLayout_7.addWidget(self.sensitivitySlider)
+        self.sensitivitySpinner = QtGui.QDoubleSpinBox(self.groupBox)
+        self.sensitivitySpinner.setObjectName(_fromUtf8("sensitivitySpinner"))
+        self.horizontalLayout_7.addWidget(self.sensitivitySpinner)
+        self.verticalLayout_7.addLayout(self.horizontalLayout_7)
+        self.label_9 = QtGui.QLabel(self.groupBox)
+        self.label_9.setObjectName(_fromUtf8("label_9"))
+        self.verticalLayout_7.addWidget(self.label_9)
+        self.horizontalLayout_6.addWidget(self.groupBox)
         self.formLayout = QtGui.QFormLayout()
         self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))
@@ -269,7 +292,7 @@ class Ui_Settings(object):
         self.graphicsView.setObjectName(_fromUtf8("graphicsView"))
         self.horizontalLayout_5.addWidget(self.graphicsView)
         self.formLayout.setLayout(1, QtGui.QFormLayout.FieldRole, self.horizontalLayout_5)
-        self.verticalLayout_7.addLayout(self.formLayout)
+        self.horizontalLayout_6.addLayout(self.formLayout)
         self.verticalLayout_8.addWidget(self.groupBox_4)
         self.horizontalLayout_4.addLayout(self.verticalLayout_8)
         self.verticalLayout_9.addLayout(self.horizontalLayout_4)
@@ -319,6 +342,8 @@ class Ui_Settings(object):
         self.label_19.setText(_translate("Settings", "Steerable:", None))
         self.label_23.setText(_translate("Settings", "Roll influence:", None))
         self.groupBox_4.setTitle(_translate("Settings", "Game", None))
+        self.groupBox.setTitle(_translate("Settings", "Steering", None))
+        self.label_9.setText(_translate("Settings", "Sensitivity", None))
         self.label_20.setText(_translate("Settings", "Time Limit:", None))
         self.timeEdit.setDisplayFormat(_translate("Settings", "mm:ss", None))
         self.label_21.setText(_translate("Settings", "Tilt Threshold:", None))

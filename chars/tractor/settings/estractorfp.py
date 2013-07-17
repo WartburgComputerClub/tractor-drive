@@ -96,3 +96,4 @@ CALIBRATION = {
     'midpoint' : gc.getfloat('wheel','midpoint'),
     'right_max': gc.getfloat('wheel','right_max'),
     }
+WHEEL_SENSITIVITY = gc.getfloat('wheel','sensitivity')

@@ -31,7 +31,7 @@ class Wheel:
                 return
         else:
             return 
-        scale = 1
+        scale = self.settings.WHEEL_SENSITIVITY
         
         x -= self.midpoint
         if x > 0:

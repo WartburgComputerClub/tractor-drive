@@ -36,7 +36,15 @@ class SettingsWidget(QWidget,Ui_Settings):
         self.dial.valueChanged.connect(self.updateImage)
         self.saveButton.clicked.connect(self.saveSettings)
         self.resetButton.clicked.connect(self.factoryReset)
-        
+        self.sensitivitySlider.valueChanged.connect(self.updateSensitivitySpinner)
+        self.sensitivitySpinner.valueChanged.connect(self.updateSensitivitySlider)
+
+    def updateSensitivitySpinner(self,value):
+        self.sensitivitySpinner.setValue(value/100.0)
+
+    def updateSensitivitySlider(self,value):
+        self.sensitivitySlider.setValue(100*value)
+
     def factoryReset(self):
         proj_home = dirname(realpath(__file__))
         proj_home = proj_home[0:proj_home.rfind('/')]
@@ -98,6 +106,8 @@ class SettingsWidget(QWidget,Ui_Settings):
         
         conf.set('game','flipThreshold',self.dial.value() * pi /100.0)
         conf.set('game','timeLimit',self.timeEdit.time().second() + self.timeEdit.time().minute()*60)
+
+        conf.set('wheel','sensitivity',self.sensitivitySpinner.value())
        
         fp = open('/tmp/global.cfg','w')
         conf.write(fp)
@@ -143,6 +153,9 @@ class SettingsWidget(QWidget,Ui_Settings):
         self.kiSlider.setValue(conf.getint('cruise_control','ki'))
         self.kdSlider.setValue(conf.getint('cruise_control','kd'))
         self.SP.setValue(conf.getfloat('cruise_control','SP'))
+
+        self.sensitivitySpinner.setValue(conf.getfloat('wheel','sensitivity'))
+        self.sensitivitySlider.setValue(int(100*conf.getfloat('wheel','sensitivity')))
         
         self.dial.setValue(conf.getfloat('game','flipThreshold') * 100/(pi))
         timeLimit = conf.getint('game','timeLimit')
