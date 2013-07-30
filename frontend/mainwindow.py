@@ -70,5 +70,5 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         call(['kdesudo','-c','reboot'])
     
     def shutdown(self):
-        call(['kdesudo','-c','halt'])
+        call(['kdesudo','-c','poweroff'])
 
